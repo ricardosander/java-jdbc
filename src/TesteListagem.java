@@ -1,35 +1,37 @@
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import br.com.alura.jdbc.database.ConnectionPool;
+
 public class TesteListagem {
 
-	public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException {
 
-		Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1/loja_virtual?useSSL=false", "root",
-				"root");
+        ConnectionPool database = new ConnectionPool();
 
-		System.out.println("Conexão aberta");
+        Connection connection = database.getConnection();
 
-		Statement statement = connection.createStatement();
-		boolean resultado = statement.execute("select * from Produto");
-		System.out.println("O resultado foi " + resultado);
+        System.out.println("Conexão aberta");
 
-		ResultSet resultSet = statement.getResultSet();
+        Statement statement = connection.createStatement();
+        boolean resultado = statement.execute("select * from Produto");
+        System.out.println("O resultado foi " + resultado);
 
-		while (resultSet.next()) {
+        ResultSet resultSet = statement.getResultSet();
 
-			int id = resultSet.getInt("id");
-			String nome = resultSet.getString("nome");
-			String descricao = resultSet.getString("descricao");
+        while (resultSet.next()) {
 
-			System.out.println(id + " - " + nome + ": " + descricao);
-		}
+            int id = resultSet.getInt("id");
+            String nome = resultSet.getString("nome");
+            String descricao = resultSet.getString("descricao");
 
-		resultSet.close();
-		statement.close();
-		connection.close();
-	}
+            System.out.println(id + " - " + nome + ": " + descricao);
+        }
+
+        resultSet.close();
+        statement.close();
+        connection.close();
+    }
 }
